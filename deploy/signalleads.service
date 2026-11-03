@@ -1,0 +1,26 @@
+# systemd service for signalleads (AI lead generator for SignalCRM).
+# Install: cp signalleads.service /etc/systemd/system/ && systemctl daemon-reload && systemctl enable --now signalleads
+# Environment comes from /etc/signalleads/signalleads.env (chmod 600, owner signalleads) - see signalleads.env.example.
+# Binds to 127.0.0.1 only; SignalCRM on the same host is the only client. No nginx exposure.
+[Unit]
+Description=signalleads - AI lead generator for SignalCRM
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=signalleads
+Group=signalleads
+WorkingDirectory=/opt/signalleads
+EnvironmentFile=/etc/signalleads/signalleads.env
+ExecStart=/usr/bin/java $JAVA_OPTS -jar /opt/signalleads/signalleads.jar
+SuccessExitStatus=143
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+
+[Install]
+WantedBy=multi-user.target

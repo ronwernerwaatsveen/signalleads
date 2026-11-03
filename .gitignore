@@ -1,0 +1,6 @@
+target/
+.DS_Store
+*.env
+!deploy/*.env.example
+.idea/
+nbproject/private/
